@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales Data Entry Form</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="icon"
+      href="img/favicon_small.ico"
+      type="image/png"
+      style="max-width: fit-content"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js" defer></script>
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <div class="presentation-container">
+        <img
+          src="img/PD_logo.png"
+          alt="PerfectDraft Logo"
+          class="presentation-logo"
+          style="margin-bottom: 1.5rem"
+        />
+        <h1>Opération Bundle</h1>
+        <div>
+          <p>Bonjour à tous,</p>
+          <p>
+            Pour procéder au remboursement des dépôts de l’offre Bundle, merci
+            de compléter ce questionnaire : il fera office de
+            <b><u>bon de commande</u></b
+            >.
+          </p>
+        </div>
+
+        <div class="info-section">
+          <h3><i class="fas fa-calendar-alt"></i> Dates de l'offre</h3>
+          <ul>
+            <li><strong>Début:</strong> 7 Novembre 2025</li>
+            <li><strong>Fin:</strong> 19 Décembre 2025</li>
+          </ul>
+        </div>
+
+        <div class="info-section">
+          <h3><i class="fas fa-beer"></i> Mécanique Consommateur</h3>
+          <p class="mechanic-detail">
+            <span class="highlight"
+              >1 PerfectDraft Black + 1 fût Leffe Blonde =
+            </span>
+            <strong>199€</strong>
+          </p>
+        </div>
+
+        <div class="info-section">
+          <h3>
+            <i class="fas fa-gift"></i> Mécanique Bundle (3 fûts offerts par
+            ABInBev)
+          </h3>
+          <ul>
+            <li><i class="fas fa-box"></i> 1 fût à intégrer au Bundle</li>
+            <li>
+              <i class="fas fa-chart-line"></i> 1 fût pour compenser la marge du
+              caviste
+            </li>
+            <li><i class="fas fa-warehouse"></i> 1 fût pour le dépôt</li>
+          </ul>
+        </div>
+
+        <div class="info-section">
+          <h3><i class="fas fa-tools"></i> Outils</h3>
+          <p>
+            Des posters sont à votre disposition dans vos box pour valoriser
+            l’offre chez vos cavistes.
+          </p>
+        </div>
+
+        <div class="info-section contact-info">
+          <h3><i class="fas fa-headset"></i> Contact</h3>
+          <ul>
+            <li>
+              <strong>Corentin Lecuyer:</strong>
+              <a href="tel:+33669718556">06 69 71 85 56</a>
+            </li>
+            <li>
+              <strong>Julia Vittet:</strong>
+              <a href="tel:+33652491540">06 52 49 15 40</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-container">
+        <a href="summary.html" class="summary-link-btn"
+          ><i class="fas fa-list-ul"></i> View Reports</a
+        >
+
+        <form id="sales-form">
+          <h2>Sales & Distribution Report</h2>
+
+          <div class="form-group">
+            <label for="t1-name">T1 Name</label>
+            <select id="t1-name" name="t1_name" required>
+              <option value="">Loading T1 names...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="poc-name">POC Name</label>
+            <select id="poc-name" name="poc_name" required>
+              <option value="">Loading POCs...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="poc-number">POC Number</label>
+            <input type="text" id="poc-number" name="poc_number" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="depot-name">DEPOT Name</label>
+            <select id="depot-name" name="depot_name" required>
+              <option value="">Loading Depots...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="depot-number">DEPOT Number</label>
+            <input type="text" id="depot-number" name="depot_number" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="machines-sold">Number of Machines Sold</label>
+            <input
+              type="number"
+              id="machines-sold"
+              name="machines_sold"
+              min="0"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="posters-distributed"
+              >Number of Posters Distributed</label
+            >
+            <input
+              type="number"
+              id="posters-distributed"
+              name="posters_distributed"
+              min="0"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="comment">Comment</label>
+            <textarea id="comment" name="comment" rows="4"></textarea>
+          </div>
+
+          <button type="submit" id="submit-btn">Submit Report</button>
+          <p id="form-message"></p>
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

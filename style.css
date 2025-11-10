@@ -1,0 +1,523 @@
+/* Import a clean font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+/* Main wrapper for the two-column layout */
+.main-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    gap: 2rem; /* Space between the two containers */
+    width: 100%;
+    padding: 1rem; /* Padding around the whole content */
+    box-sizing: border-box;
+}
+
+/* Presentation Container (Left Side) */
+.presentation-container {
+    flex: 1; /* Allows it to grow and shrink */
+    min-width: 350px; /* Minimum width before wrapping */
+    background-color: #ffffff; /* Light blue background */
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    color: #333;
+    display: flex; /* Flex container for its own content */
+    flex-direction: column;
+    gap: 1rem; /* Space between sections */
+}
+
+.presentation-logo {
+    max-width: 180px; /* Size of the logo */
+    height: auto;
+   
+    align-self: center; /* Center the logo */
+}
+
+.presentation-container h1 {
+    color: #333; /* Darker blue for main title */
+    margin-top: 0;
+    text-align: center;
+    font-size: 2.2em;
+}
+
+.presentation-container p {
+    line-height: 1.6;
+    
+}
+
+.presentation-container b {
+    font-weight: 700;
+    color: #000000;
+}
+
+.info-section {
+    background-color: #f7fcfd; /* Lighter background for sections */
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border-left: 5px solid #000000;
+    margin-bottom: 1rem;
+}
+
+.info-section h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    font-size: 1.3em;
+    display: flex;
+    align-items: center;
+}
+
+.info-section h3 i {
+    margin-right: 0.75rem;
+    color: #000000;
+    font-size: 1.1em;
+}
+
+.info-section ul {
+    list-style: none; /* Remove default list bullets */
+    padding-left: 0;
+    margin: 0;
+}
+
+.info-section ul li {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    line-height: 1.4;
+}
+
+.info-section ul li i {
+    margin-right: 0.75rem;
+    color: #28a745; /* Green for checkmark/specific icons */
+    font-size: 0.9em;
+}
+
+.mechanic-detail {
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.mechanic-detail .highlight {
+    color: #333;
+    font-weight: 600;
+}
+
+.mechanic-detail strong {
+    color: #dc3545; /* Red for price emphasis */
+    font-size: 1.2em;
+}
+
+.contact-info ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.contact-info ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Form Container (Right Side) */
+.form-container {
+    flex: 1.2; /* Slightly larger than the presentation container */
+    min-width: 400px; /* Minimum width before wrapping */
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* Ensure content flows vertically */
+}
+
+/* The rest of the form styles (from previous version) */
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #555;
+}
+
+/* Unified input, select, textarea styles */
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Style for focus */
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0,123,255,0.25);
+}
+
+/* Style for readonly fields */
+input[readonly] {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    color: #777;
+}
+
+textarea {
+    resize: vertical; /* Allow vertical resizing only */
+    min-height: 80px;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button[type="submit"]:hover {
+    background-color: #b3a400;
+}
+
+/* For form messages (success/error) */
+#form-message {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+#form-message.success {
+    color: green;
+}
+
+#form-message.error {
+    color: red;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .main-wrapper {
+        flex-direction: column; /* Stack vertically on smaller screens */
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+
+    .presentation-container, .form-container {
+        min-width: unset; /* Remove min-width when stacked */
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .presentation-logo {
+        max-width: 150px;
+    }
+
+    .presentation-container h1 {
+        font-size: 1.8em;
+    }
+}
+img.logo {
+    display: block;
+    margin: 0 auto 1.5rem auto;
+    max-width: 200px;
+    height: auto;
+}
+
+.summary-link-btn,
+.back-link-btn {
+    display: inline-block;
+    padding: 0.7rem 1rem;
+    background-color: #ffec8d;
+    color: #000;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    font-size: 0.9rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.summary-link-btn:hover,
+.back-link-btn:hover {
+    background-color: #000;
+    color: white;
+}
+
+/* Position the "View Reports" button on the form page */
+.form-container {
+    position: relative; /* Required for absolute positioning */
+}
+
+.summary-link-btn {
+    position: absolute;
+    top: 2.5rem;
+    right: 2.5rem;
+}
+
+/* --- STYLES FOR SUMMARY PAGE --- */
+.summary-page {
+    justify-content: center;
+    align-items: flex-start;
+
+}
+
+.summary-container {
+    width: 100%;
+    max-width: 2000px; /* Wider container for the list */
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 1.5rem;
+}
+
+.summary-header h1 {
+    margin: 0;
+    color: #333;
+}
+
+.report-card {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.report-card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #eee;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.report-card-header .report-date {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.report-card-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    line-height: 1.6;
+}
+
+.report-card-body p {
+    margin: 0.5rem 0;
+}
+
+.report-card-body .comment {
+    font-style: italic;
+    color: #555;
+}
+
+.report-card-actions {
+    padding: 0.5rem 1.5rem 1rem 1.5rem;
+    text-align: right;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+    transition: all 0.2s;
+}
+
+.btn-edit {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+}
+.btn-edit:hover {
+    background-color: #e0e0e0;
+}
+
+.btn-delete {
+    background-color: #fde8e8;
+    color: #c00;
+    border: 1px solid #f9c0c0;
+}
+.btn-delete:hover {
+    background-color: #f8d0d0;
+}
+
+p.error {
+    color: red;
+}
+
+/* --- STYLES FOR NEW T1 FILTER --- */
+.filter-bar {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-bar label {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.filter-bar select {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+
+
+}
+/* --- RESPONSIVE CARD STYLES --- */
+
+/* On screens 767px wide or less */
+@media (max-width: 767px) {
+    
+    .report-card-header {
+        /* Allow items to wrap onto new lines */
+        flex-wrap: wrap;
+    }
+
+    .report-card-header > span {
+        /* Make T1 and POC take up half the width */
+        flex-basis: 50%;
+        margin-bottom: 0.5rem;
+    }
+
+    .report-card-header .report-date {
+        /* Make the date take full width */
+        flex-basis: 100%;
+        font-size: 0.8rem;
+        color: #777;
+    }
+
+    .report-card-actions {
+        /* Make the actions block move to the bottom... */
+        order: 10; /* ...of the header (which is fine) */
+        flex-basis: 100%; /* Make it full-width */
+        margin-top: 1rem;
+        
+        /* Justify the buttons to the right */
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+/* --- CHOICES.JS STYLE OVERRIDES --- */
+/* This makes the new searchable dropdowns match your site's style */
+
+/* The main container */
+.choices {
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+}
+.choices__inner {
+    width: 100%;
+    padding: 0.4rem 0.8rem; /* Adjusted padding to look right */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box; 
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fff; /* Ensure it has a white background */
+    min-height: auto; /* Remove default min-height */
+}
+
+/* The container when it's focused */
+.is-focused .choices__inner {
+    outline: none;
+    border-color: #000000; /* Your focus color */
+    box-shadow: 0 0 5px rgba(0,123,255,0.25); /* Your focus shadow */
+}
+
+/* The search input field */
+.choices__input {
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    background-color: transparent; /* Fix for dark mode flashes */
+}
+
+/* The text for the selected item */
+.choices__list--single .choices__item {
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* The dropdown menu */
+.choices__list--dropdown {
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    margin-top: 4px; /* Give it a little space */
+}
+
+/* The items in the dropdown menu */
+.choices__item--choice {
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    padding: 0.8rem;
+}
+
+/* Style for the 'Show All' option in the T1 filter */
+#t1-filter .choices__inner {
+    padding: 0.3rem 0.5rem; /* Slightly smaller for the filter bar */
+    font-size: 0.9rem;
+}
