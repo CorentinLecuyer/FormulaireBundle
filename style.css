@@ -9,7 +9,6 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    /* align-items: center; */
 }
 
 /* Main wrapper for the two-column layout */
@@ -26,7 +25,7 @@ body {
 .presentation-container {
     flex: 1; /* Allows it to grow and shrink */
     min-width: 350px; /* Minimum width before wrapping */
-    background-color: #ffffff; /* Light blue background */
+    background-color: #ffffff;
     padding: 2.5rem;
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
@@ -39,7 +38,6 @@ body {
 .presentation-logo {
     max-width: 180px; /* Size of the logo */
     height: auto;
-   
     align-self: center; /* Center the logo */
 }
 
@@ -52,7 +50,6 @@ body {
 
 .presentation-container p {
     line-height: 1.6;
-    
 }
 
 .presentation-container b {
@@ -138,6 +135,7 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column; /* Ensure content flows vertically */
+    position: relative; /* Required for absolute positioning of children */
 }
 
 /* The rest of the form styles (from previous version) */
@@ -227,28 +225,6 @@ button[type="submit"]:hover {
     color: red;
 }
 
-/* Responsive adjustments */
-@media (max-width: 900px) {
-    .main-wrapper {
-        flex-direction: column; /* Stack vertically on smaller screens */
-        padding: 1rem;
-        gap: 1.5rem;
-    }
-
-    .presentation-container, .form-container {
-        min-width: unset; /* Remove min-width when stacked */
-        width: 100%;
-        padding: 1.5rem;
-    }
-
-    .presentation-logo {
-        max-width: 150px;
-    }
-
-    .presentation-container h1 {
-        font-size: 1.8em;
-    }
-}
 img.logo {
     display: block;
     margin: 0 auto 1.5rem auto;
@@ -256,11 +232,27 @@ img.logo {
     height: auto;
 }
 
+/* --- BUTTON STYLES (FIXED) --- */
+/* Common style for both buttons */
+.summary-link-btn{
+    background-color: #e4d100e1;
+}
+
+.back-link-btn {
+    background-color: #41c71091;
+}
+.summary-link-btn:hover{
+    background-color: #ffeb11e1;
+}
+.back-link-btn:hover {
+    background-color: #41c710e1;
+}
+
+
 .summary-link-btn,
 .back-link-btn {
-    display: inline-block;
+    display: inline-block; /* Changed from position: absolute */
     padding: 0.7rem 1rem;
-    background-color: #ffec8d;
     color: #000;
     text-decoration: none;
     border-radius: 6px;
@@ -270,28 +262,21 @@ img.logo {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-.summary-link-btn:hover,
-.back-link-btn:hover {
-    background-color: #000;
-    color: white;
-}
 
-/* Position the "View Reports" button on the form page */
-.form-container {
-    position: relative; /* Required for absolute positioning */
-}
-
+/* Specific style for the "View Reports" button on the form page */
 .summary-link-btn {
-    position: absolute;
+    position: absolute; /* This one IS absolute (relative to .form-container) */
     top: 2.5rem;
     right: 2.5rem;
 }
+/* The .back-link-btn no longer has position: absolute, fixing the float */
+/* --- END OF BUTTON FIX --- */
+
 
 /* --- STYLES FOR SUMMARY PAGE --- */
 .summary-page {
     justify-content: center;
     align-items: flex-start;
-
 }
 
 .summary-container {
@@ -311,11 +296,15 @@ img.logo {
     margin-bottom: 2rem;
     border-bottom: 2px solid #f0f0f0;
     padding-bottom: 1.5rem;
+    flex-wrap: wrap; /* Allows wrapping */
 }
 
 .summary-header h1 {
     margin: 0;
     color: #333;
+    flex-grow: 1; /* Allows it to take space */
+    margin-left: 1rem;
+    text-align: center;
 }
 
 .report-card {
@@ -331,9 +320,12 @@ img.logo {
     border-bottom: 1px solid #eee;
     background-color: #fafafa;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 1rem ;
     align-items: center;
     font-size: 1.2rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .report-card-header .report-date {
@@ -347,20 +339,27 @@ img.logo {
     justify-content: space-between;
     padding: 1rem 1.5rem;
     line-height: 1.6;
+    flex-wrap: wrap; /* Allows body content to wrap */
 }
 
 .report-card-body p {
-    margin: 0.5rem 0;
+    margin: 3px;
 }
 
 .report-card-body .comment {
     font-style: italic;
-    color: #555;
+    color: #333;
+    padding: 1rem;
+    background-color: rgb(255, 255, 209);
+    border-radius: 6px;
+    flex-basis: 100%; /* Make comment take full width */
 }
 
 .report-card-actions {
-    padding: 0.5rem 1.5rem 1rem 1.5rem;
+
     text-align: right;
+    flex-grow: 1;
+    margin-left: auto;
 }
 
 .btn-edit,
@@ -407,117 +406,155 @@ p.error {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-wrap: wrap; /* Allows filter to wrap */
 }
 
 .filter-bar label {
     font-weight: 500;
     color: #333;
     font-size: 0.9rem;
+    margin-right: 0.5rem;
 }
 
-.filter-bar select {
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-
-
-}
-/* --- RESPONSIVE CARD STYLES --- */
-
-/* On screens 767px wide or less */
-@media (max-width: 767px) {
-    
-    .report-card-header {
-        /* Allow items to wrap onto new lines */
-        flex-wrap: wrap;
-    }
-
-    .report-card-header > span {
-        /* Make T1 and POC take up half the width */
-        flex-basis: 50%;
-        margin-bottom: 0.5rem;
-    }
-
-    .report-card-header .report-date {
-        /* Make the date take full width */
-        flex-basis: 100%;
-        font-size: 0.8rem;
-        color: #777;
-    }
-
-    .report-card-actions {
-        /* Make the actions block move to the bottom... */
-        order: 10; /* ...of the header (which is fine) */
-        flex-basis: 100%; /* Make it full-width */
-        margin-top: 1rem;
-        
-        /* Justify the buttons to the right */
-        display: flex;
-        justify-content: flex-end;
-    }
+.filter-bar .choices {
+    flex-grow: 1; /* Makes the select box grow to fill space */
+    min-width: 200px; /* Prevents it from getting too small */
 }
 
 /* --- CHOICES.JS STYLE OVERRIDES --- */
-/* This makes the new searchable dropdowns match your site's style */
-
-/* The main container */
 .choices {
     font-family: 'Inter', sans-serif;
     width: 100%;
 }
 .choices__inner {
     width: 100%;
-    padding: 0.4rem 0.8rem; /* Adjusted padding to look right */
+    padding: 0.4rem 0.8rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     box-sizing: border-box; 
     font-size: 1rem;
     font-family: 'Inter', sans-serif;
     transition: border-color 0.2s, box-shadow 0.2s;
-    background-color: #fff; /* Ensure it has a white background */
-    min-height: auto; /* Remove default min-height */
+    background-color: #fff;
+    min-height: auto;
 }
 
-/* The container when it's focused */
 .is-focused .choices__inner {
     outline: none;
-    border-color: #000000; /* Your focus color */
-    box-shadow: 0 0 5px rgba(0,123,255,0.25); /* Your focus shadow */
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0,123,255,0.25);
 }
 
-/* The search input field */
 .choices__input {
     font-size: 1rem;
     font-family: 'Inter', sans-serif;
-    background-color: transparent; /* Fix for dark mode flashes */
+    background-color: transparent;
 }
 
-/* The text for the selected item */
 .choices__list--single .choices__item {
     font-size: 1rem;
     font-family: 'Inter', sans-serif;
 }
 
-/* The dropdown menu */
 .choices__list--dropdown {
     border-radius: 6px;
     border: 1px solid #ddd;
     font-size: 1rem;
     font-family: 'Inter', sans-serif;
-    margin-top: 4px; /* Give it a little space */
+    margin-top: 4px;
 }
 
-/* The items in the dropdown menu */
 .choices__item--choice {
     font-size: 1rem;
     font-family: 'Inter', sans-serif;
     padding: 0.8rem;
 }
 
-/* Style for the 'Show All' option in the T1 filter */
 #t1-filter .choices__inner {
-    padding: 0.3rem 0.5rem; /* Slightly smaller for the filter bar */
+    padding: 0.3rem 0.5rem;
     font-size: 0.9rem;
+}
+
+@media (max-width: 1250px) {
+    .summary-link-btn {
+        position: static; /* Remove absolute positioning */
+        order: 2; /* Place it *after* the form */
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}
+/* --- RESPONSIVE STYLES (900px and down) --- */
+@media (max-width: 900px) {
+
+
+    .presentation-container, .form-container {
+        min-width: unset;
+        padding: 1.5rem;
+        /* Add flex rules for reordering */
+        display: flex;
+        flex-direction: column;
+    }
+    
+    #sales-form {
+      order: 1; /* Show the form first */
+    }
+
+    /* This is the fix for the button you asked for previously */
+
+
+    .presentation-logo {
+        max-width: 150px;
+    }
+
+    .presentation-container h1 {
+        font-size: 1.8em;
+    }
+
+    /* --- SUMMARY PAGE RESPONSIVENESS --- */
+    .summary-header {
+        flex-direction: column; /* Stack logo, title, and button */
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .summary-header h1 {
+        margin-left: 0;
+        text-align: center;
+        align-self: center;
+    }
+
+    .filter-bar {
+        flex-direction: column; /* Stack label and filter */
+        align-items: stretch; /* Make children full-width */
+    }
+
+    .filter-bar .choices {
+        min-width: 100%; /* Ensure it takes full width */
+    }
+
+    .report-card-body {
+        flex-direction: column; /* Stack card body items */
+    }
+    
+    /* This section is for screens 767px and smaller */
+    /* It's nested to also apply the 900px rules */
+    @media (max-width: 767px) {
+        .report-card-header {
+            flex-wrap: wrap;
+        }
+
+        .report-card-header .report-date {
+            flex-basis: 100%;
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .report-card-actions {
+            order: 10;
+            flex-basis: 100%;
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
 }
