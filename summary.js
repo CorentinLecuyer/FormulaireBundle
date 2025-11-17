@@ -1,4 +1,4 @@
-// --- 1. SETUP: Must be the same as your script.js ---
+// --- 1. SETUP ---
 const SUPABASE_URL = 'https://nxgfcjqjhjbermxcobkv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54Z2ZjanFqaGpiZXJteGNvYmt2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODcxMTUsImV4cCI6MjA3NzE2MzExNX0.YcIZo_9UfNjgjMMrgEUh6Z1O_G90oRAlBNMzkxrGlZg';
 
@@ -12,29 +12,30 @@ const t1FilterSelect = document.getElementById('t1-filter');
 
 // --- 4. Data Storage ---
 let allReports = [];
-let t1FilterChoiceInstance = null; // <-- Store the instance
+let t1FilterChoiceInstance = null;
 
 // --- 5. Main Function to Load Data ---
 async function loadData() {
     try {
         reportsListContainer.innerHTML = "<p>Loading reports...</p>";
 
+        // --- UPDATED QUERY WITH NEW COLUMN NAMES ---
         const { data, error } = await _supabase
             .from('sales_reports')
             .select(`
                 *,
                 t1_users ( id, full_name ),
-                pocs ( poc_name ),
-                depots ( depot_name )
+                pocs ( Name, ABI_SFA_City__c ),
+                depots ( "Ship to Name" ) 
             `)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
 
-        allReports = data; // Store the data
+        allReports = data; 
         
-        populateT1Filter(allReports); // Populate the filter
-        renderReports(allReports); // Render the initial full list
+        populateT1Filter(allReports);
+        renderReports(allReports); 
 
     } catch (error) {
         console.error('Error loading reports:', error);
@@ -42,26 +43,22 @@ async function loadData() {
     }
 }
 
-// --- 6. UPDATED Function to Populate T1 Filter ---
+// --- 6. Function to Populate T1 Filter ---
 function populateT1Filter(reports) {
     const t1s = new Map();
     
-    // Create a unique list of T1s from the reports
     reports.forEach(report => {
         if (report.t1_users) {
             t1s.set(report.t1_user_id, report.t1_users.full_name);
         }
     });
 
-    // Sort the T1s alphabetically by name
     const sortedT1s = new Map([...t1s.entries()].sort((a, b) => a[1].localeCompare(b[1])));
 
     if (t1FilterChoiceInstance) {
         t1FilterChoiceInstance.destroy();
     }
 
-
-    // Populate the select dropdown
     t1FilterSelect.innerHTML = '<option value="all">Show All</option>';
     sortedT1s.forEach((name, id) => {
         const option = document.createElement('option');
@@ -70,34 +67,39 @@ function populateT1Filter(reports) {
         t1FilterSelect.appendChild(option);
     });
 
-    // Initialize Choices.js on the filter dropdown
     t1FilterChoiceInstance = new Choices(t1FilterSelect, { 
         searchEnabled: true, 
         searchResultLimit: 10,
-        shouldSort: false, // We already sorted it
-
+        shouldSort: false,
         fuseOptions: {
-            shouldSort: true, // Sort results by relevance
-            threshold: 0.1,   // Be more strict (0.0 = perfect match, 1.0 = match all)
-            ignoreLocation: true, // Search the entire string, not just the start
-            minMatchCharLength: 1  // Only find matches of 1 char or more
+          shouldSort: true,
+          threshold: 0.3,
+          ignoreLocation: true,
+          minMatchCharLength: 2
         }
     });
 }
 
-// --- 7. NEW Function to Render Reports ---
+// --- 7. Render Reports ---
 function renderReports(reportsToDisplay) {
     if (reportsToDisplay.length === 0) {
         reportsListContainer.innerHTML = "<p>No reports found for this filter.</p>";
         return;
     }
 
-    // Build the HTML for the list
-    reportsListContainer.innerHTML = reportsToDisplay.map(report => `
+    // --- UPDATE DISPLAY LOGIC TO USE NEW COLUMNS ---
+    reportsListContainer.innerHTML = reportsToDisplay.map(report => {
+        const pocName = report.pocs?.Name || 'N/A';
+        const pocCity = report.pocs?.ABI_SFA_City__c ? `(${report.pocs.ABI_SFA_City__c})` : '';
+        
+        // Accessing the column with spaces requires bracket notation ["..."]
+        const depotName = report.depots?.["Ship to Name"] || 'N/A';
+
+        return `
         <div class="report-card">
             <div class="report-card-header">
                 <span><strong>T1:</strong> ${report.t1_users?.full_name || 'N/A'} </span>
-                <span><strong>POC:</strong> ${report.pocs?.poc_name || 'N/A'}</span>
+                <span><strong>POC:</strong> ${pocName} ${pocCity}</span>
                 <span class="report-date">${new Date(report.created_at).toLocaleDateString()}</span>
             <div class="report-card-actions">
                 <button class="btn-edit" data-id="${report.id}"><i class="fas fa-edit"></i> Edit</button>
@@ -105,32 +107,28 @@ function renderReports(reportsToDisplay) {
             </div>
             </div>
             <div class="report-card-body">
-                <p><strong>Depot:</strong> ${report.depots?.depot_name || 'N/A'}</p>
+                <p><strong>Depot:</strong> ${depotName}</p>
                 <p><strong>Machines:</strong> ${report.machines_sold}</p> 
                 <p><strong>Posters:</strong> ${report.posters_distributed}</p>
                 <p class="comment"><strong>Comment:</strong> ${report.comment || 'N/A'}</p>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 
 // --- 8. Event Listeners ---
-
-// Listen for changes on the T1 filter
 t1FilterSelect.addEventListener('change', () => {
     const selectedT1Id = t1FilterSelect.value;
 
     if (selectedT1Id === 'all') {
-        renderReports(allReports); // Show all
+        renderReports(allReports); 
     } else {
-        // Filter the reports
         const filteredReports = allReports.filter(report => report.t1_user_id === selectedT1Id);
         renderReports(filteredReports);
     }
 });
 
-// Handle Edit/Delete Clicks (this is the same as before)
 reportsListContainer.addEventListener('click', (e) => {
     const editButton = e.target.closest('.btn-edit');
     const deleteButton = e.target.closest('.btn-delete');
@@ -159,9 +157,7 @@ async function handleDelete(id) {
                 .eq('id', id);
 
             if (error) throw error;
-
-            // --- UPDATED: Reload data from scratch to update list and filter ---
-            loadData(); // This will now correctly rebuild the Choices.js filter
+            loadData(); 
 
         } catch (error) {
             console.error('Error deleting report:', error);
@@ -170,5 +166,4 @@ async function handleDelete(id) {
     }
 }
 
-// --- 9. Load data when the page is ready ---
 document.addEventListener('DOMContentLoaded', loadData);

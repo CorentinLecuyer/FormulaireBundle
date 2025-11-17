@@ -23,16 +23,15 @@ const formMessage = document.getElementById('form-message');
 // --- 4. Data Storage ---
 let pocData = [];
 let depotData = [];
-let currentEditId = null; // <-- ADDED: To track if we are in edit mode
+let currentEditId = null;
 
+// Store Choices.js instances
 let t1ChoiceInstance, pocChoiceInstance, depotChoiceInstance;
 
 // --- 5. Helper Function to Populate Select ---
 function populateSelect(selectElement, data, nameCol, idCol = 'id') {
-    // Clear loading text
     selectElement.innerHTML = `<option value="">-- Select an option --</option>`;
-
-    // Populate with data
+    
     data.forEach(item => {
         const option = document.createElement('option');
         option.value = item[idCol];
@@ -52,23 +51,62 @@ async function loadInitialData() {
         if (t1Error) throw t1Error;
         populateSelect(t1Select, t1Names, 'full_name');
 
-        // Fetch POCs
+        // --- FETCH POCS ---
         const { data: pocs, error: pocError } = await _supabase
             .from('pocs')
-            .select('id, poc_name, poc_number')
-            .order('poc_name', { ascending: true });
+            .select('id, Name, ABI_SFA_SAPID__c, ABI_SFA_City__c');
+        
         if (pocError) throw pocError;
-        pocData = pocs;
-        populateSelect(pocSelect, pocData, 'poc_name');
 
-        // Fetch Depots
+        // Sort POCs (Letters first)
+        pocs.sort((a, b) => {
+             const nameA = a.Name ? a.Name.trim() : '';
+             const nameB = b.Name ? b.Name.trim() : '';
+             const isLetterA = /^[a-zA-Z\u00C0-\u00FF]/.test(nameA);
+             const isLetterB = /^[a-zA-Z\u00C0-\u00FF]/.test(nameB);
+             if (isLetterA && !isLetterB) return -1;
+             if (!isLetterA && isLetterB) return 1;
+             return nameA.localeCompare(nameB, 'fr', { sensitivity: 'base' });
+        });
+
+        pocData = pocs.map(poc => ({
+            ...poc,
+            displayLabel: `${poc.Name} // ${poc.ABI_SFA_City__c || '?'} // ${poc.ABI_SFA_SAPID__c || 'No ID'}`
+        }));
+        populateSelect(pocSelect, pocData, 'displayLabel');
+
+
+        // --- UPDATED DEPOT FETCHING & SORTING ---
+        // Note the quotes around column names with spaces
         const { data: depots, error: depotError } = await _supabase
             .from('depots')
-            .select('id, depot_name, depot_number')
-            .order('depot_name', { ascending: true });
+            .select('id, "Ship to Name", "Ship to number", "Sous groupement"');
+            
         if (depotError) throw depotError;
-        depotData = depots;
-        populateSelect(depotSelect, depotData, 'depot_name');
+
+        // Sort Depots (Letters first) using "Ship to Name"
+        depots.sort((a, b) => {
+             // Use bracket notation for keys with spaces
+             const nameA = a["Ship to Name"] ? a["Ship to Name"].trim() : '';
+             const nameB = b["Ship to Name"] ? b["Ship to Name"].trim() : '';
+             
+             const isLetterA = /^[a-zA-Z\u00C0-\u00FF]/.test(nameA);
+             const isLetterB = /^[a-zA-Z\u00C0-\u00FF]/.test(nameB);
+             
+             if (isLetterA && !isLetterB) return -1;
+             if (!isLetterA && isLetterB) return 1;
+             
+             return nameA.localeCompare(nameB, 'fr', { sensitivity: 'base' });
+        });
+
+        // Map the sorted data to a searchable format
+        depotData = depots.map(depot => ({
+            ...depot,
+            // Create a combined string for searching
+            displayLabel: `${depot["Ship to Name"]} // ${depot["Ship to number"] || 'No #'} // ${depot["Sous groupement"] || ''}`
+        }));
+
+        populateSelect(depotSelect, depotData, 'displayLabel');
 
     } catch (error) {
         console.error('Error loading initial data:', error);
@@ -77,22 +115,19 @@ async function loadInitialData() {
     }
 }
 
-// --- NEW: Check for Edit Mode ---
+// --- Check for Edit Mode ---
 async function checkEditMode() {
-    // Wait for dropdowns to be populated
-    await loadInitialData();
+    await loadInitialData(); 
 
-    // Initialize Choices.js *first* and store instances
     const choiceOptions = {
         searchEnabled: true,
         searchResultLimit: 10,
-        shouldSort: false,
-
+        shouldSort: false, // Keep our custom JS sort
         fuseOptions: {
-            shouldSort: true, // Sort results by relevance
-            threshold: 0.1,   // Be more strict (0.0 = perfect match, 1.0 = match all)
-            ignoreLocation: true, // Search the entire string, not just the start
-            minMatchCharLength: 1  // Only find matches of 1 char or more
+          shouldSort: true,
+          threshold: 0.3,
+          ignoreLocation: true,
+          minMatchCharLength: 2
         }
     };
     t1ChoiceInstance = new Choices(t1Select, choiceOptions);
@@ -104,18 +139,16 @@ async function checkEditMode() {
     currentEditId = params.get('edit_id');
 
     if (currentEditId) {
-        // We are in edit mode
         form.querySelector('h2').textContent = 'Edit Report';
         submitButton.textContent = 'Update Report';
 
         try {
-            // Fetch the specific report
             const { data, error } = await _supabase
                 .from('sales_reports')
                 .select('*')
                 .eq('id', currentEditId)
-                .single(); // Get a single record
-
+                .single(); 
+            
             if (error) throw error;
             if (!data) {
                 formMessage.textContent = 'Error: Report not found.';
@@ -123,18 +156,14 @@ async function checkEditMode() {
                 return;
             }
 
-            // ▼▼▼ THIS IS THE FIX ▼▼▼
-            // Populate the form fields using the Choices.js API
             t1ChoiceInstance.setChoiceByValue(data.t1_user_id.toString());
             pocChoiceInstance.setChoiceByValue(data.poc_id.toString());
             depotChoiceInstance.setChoiceByValue(data.depot_id.toString());
-            // ▲▲▲ END OF FIX ▲▲▲
 
             machinesInput.value = data.machines_sold;
             postersInput.value = data.posters_distributed;
             commentInput.value = data.comment;
 
-            // Manually trigger change events to update dependent fields
             pocSelect.dispatchEvent(new Event('change'));
             depotSelect.dispatchEvent(new Event('change'));
 
@@ -148,40 +177,42 @@ async function checkEditMode() {
 
 
 // --- 7. Event Listeners for Dependent Fields ---
+
 pocSelect.addEventListener('change', (e) => {
     const selectedPocId = e.target.value;
     const selectedPoc = pocData.find(poc => poc.id == selectedPocId);
-
+    
     if (selectedPoc) {
-        pocNumberInput.value = selectedPoc.poc_number;
+        pocNumberInput.value = selectedPoc.ABI_SFA_SAPID__c || ''; 
     } else {
         pocNumberInput.value = '';
     }
 });
 
+// --- UPDATED DEPOT LISTENER ---
 depotSelect.addEventListener('change', (e) => {
     const selectedDepotId = e.target.value;
     const selectedDepot = depotData.find(depot => depot.id == selectedDepotId);
-
+    
     if (selectedDepot) {
-        depotNumberInput.value = selectedDepot.depot_number;
+        // Use bracket notation for "Ship to number"
+        depotNumberInput.value = selectedDepot["Ship to number"] || '';
     } else {
         depotNumberInput.value = '';
     }
 });
 
-// --- 8. Handle Form Submission (UPDATED) ---
+// --- 8. Handle Form Submission ---
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
+    
     submitButton.disabled = true;
     submitButton.textContent = 'Submitting...';
     formMessage.textContent = '';
 
     try {
-        // Collect form data (same as before)
         const formData = {
-            t1_user_id: t1Select.value,
+            t1_user_id: t1Select.value, 
             poc_id: pocSelect.value,
             depot_id: depotSelect.value,
             machines_sold: machinesInput.value,
@@ -193,45 +224,37 @@ form.addEventListener('submit', async (e) => {
 
         let error;
 
-        // --- UPDATED LOGIC: Check if we are editing or inserting ---
         if (currentEditId) {
-            // We are UPDATING an existing record
             const { error: updateError } = await _supabase
                 .from('sales_reports')
                 .update(formData)
                 .eq('id', currentEditId);
             error = updateError;
         } else {
-            // We are INSERTING a new record
             const { error: insertError } = await _supabase
                 .from('sales_reports')
                 .insert([formData]);
             error = insertError;
         }
-
+        
         if (error) throw error;
 
-        // --- UPDATED SUCCESS ---
         if (currentEditId) {
-            // If update is successful, go back to the summary page
             formMessage.textContent = 'Report updated successfully!';
             formMessage.className = 'success';
             window.location.href = 'summary.html';
         } else {
-            // If insert is successful, clear the form
             formMessage.textContent = 'Report submitted successfully!';
             formMessage.className = 'success';
-
-            // ▼▼▼ Clear Choices.js fields correctly ▼▼▼
+            
             t1ChoiceInstance.clearInput();
             t1ChoiceInstance.setChoiceByValue('');
             pocChoiceInstance.clearInput();
             pocChoiceInstance.setChoiceByValue('');
             depotChoiceInstance.clearInput();
             depotChoiceInstance.setChoiceByValue('');
-            // ▲▲▲ END OF FIX ▲▲▲
 
-            form.reset(); // Clear other fields
+            form.reset(); 
             pocNumberInput.value = '';
             depotNumberInput.value = '';
         }
@@ -242,11 +265,8 @@ form.addEventListener('submit', async (e) => {
         formMessage.className = 'error';
     } finally {
         submitButton.disabled = false;
-        // Reset button text based on mode
         submitButton.textContent = currentEditId ? 'Update Report' : 'Submit Report';
     }
 });
 
-// --- 9. Load data when the page is ready (UPDATED) ---
-// We now call checkEditMode, which in turn calls loadInitialData
 document.addEventListener('DOMContentLoaded', checkEditMode);
