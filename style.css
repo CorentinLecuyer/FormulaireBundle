@@ -540,6 +540,7 @@ p.error {
     /* This section is for screens 767px and smaller */
     /* It's nested to also apply the 900px rules */
     @media (max-width: 767px) {
+        
         .report-card-header {
             flex-wrap: wrap;
         }
@@ -555,6 +556,13 @@ p.error {
             flex-basis: 100%;
             display: flex;
             justify-content: flex-end;
+        }
+
+        @media (max-width: 633px) {
+
+            .main-wrapper {
+                display: block; /* Stack containers vertically */
+            }
         }
     }
 }
