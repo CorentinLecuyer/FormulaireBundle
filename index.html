@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sales Data Entry Form</title>
+    <title>Formulaire Sales - PerfectDraft</title>
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -103,45 +103,45 @@
 
       <div class="form-container">
         <a href="summary.html" class="summary-link-btn"
-          ><i class="fas fa-list-ul"></i> View Reports</a
+          ><i class="fas fa-list-ul"></i> Voir les Rapports</a
         >
 
         <form id="sales-form">
           <h2>Rapport de Vente</h2>
 
           <div class="form-group">
-            <label for="t1-name">T1 Name</label>
+            <label for="t1-name">T1</label>
             <select id="t1-name" name="t1_name" required>
               <option value="">Loading T1 names...</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="poc-name">POC Name</label>
+            <label for="poc-name">Nom du POC</label>
             <select id="poc-name" name="poc_name" required>
               <option value="">Loading POCs...</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="poc-number">POC Number</label>
+            <label for="poc-number">Numéro du POC</label>
             <input type="text" id="poc-number" name="poc_number" readonly />
           </div>
 
           <div class="form-group">
-            <label for="depot-name">DEPOT Name</label>
+            <label for="depot-name">Nom du DEPOT</label>
             <select id="depot-name" name="depot_name" required>
               <option value="">Loading Depots...</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="depot-number">DEPOT Number</label>
+            <label for="depot-number">Numéro du DEPOT</label>
             <input type="text" id="depot-number" name="depot_number" readonly />
           </div>
 
           <div class="form-group">
-            <label for="machines-sold">Number of Machines Sold</label>
+            <label for="machines-sold">Nombre de Machines Vendues</label>
             <input
               type="number"
               id="machines-sold"
@@ -153,7 +153,7 @@
 
           <div class="form-group">
             <label for="posters-distributed"
-              >Number of Posters Distributed</label
+              >Nombre de Posters Distribués</label
             >
             <input
               type="number"
@@ -165,11 +165,11 @@
           </div>
 
           <div class="form-group">
-            <label for="comment">Comment</label>
+            <label for="comment">Commentaire</label>
             <textarea id="comment" name="comment" rows="4"></textarea>
           </div>
 
-          <button type="submit" id="submit-btn">Submit Report</button>
+          <button type="submit" id="submit-btn">Soumettre le Rapport</button>
           <p id="form-message"></p>
         </form>
       </div>
