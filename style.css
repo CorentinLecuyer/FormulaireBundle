@@ -475,6 +475,18 @@ p.error {
     font-size: 0.9rem;
 }
 
+.manual-input {
+    margin-top: 0.8rem;
+    
+    border-color: #000000 !important; /* Highlight it slightly */
+    background-color:#fff8de
+}
+
+/* Utility class to hide elements */
+.hidden {
+    display: none;
+}
+
 @media (max-width: 1250px) {
     .summary-link-btn {
         position: static; /* Remove absolute positioning */

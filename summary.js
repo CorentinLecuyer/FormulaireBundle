@@ -83,23 +83,33 @@ function populateT1Filter(reports) {
 // --- 7. Render Reports ---
 function renderReports(reportsToDisplay) {
     if (reportsToDisplay.length === 0) {
-        reportsListContainer.innerHTML = "<p>No reports found for this filter.</p>";
+        reportsListContainer.innerHTML = "<p>No reports found.</p>";
         return;
     }
 
-    // --- UPDATE DISPLAY LOGIC TO USE NEW COLUMNS ---
     reportsListContainer.innerHTML = reportsToDisplay.map(report => {
-        const pocName = report.pocs?.Name || 'N/A';
+        // LOGIC: Try to get linked name. If null, check for Manual Name. Else N/A.
+        let pocDisplay = report.pocs?.Name;
+        if (!pocDisplay && report.Inexistant_POCname) {
+            pocDisplay = `${report.Inexistant_POCname} (Manuel)`;
+        } else if (!pocDisplay) {
+            pocDisplay = 'N/A';
+        }
+        
         const pocCity = report.pocs?.ABI_SFA_City__c ? `(${report.pocs.ABI_SFA_City__c})` : '';
         
-        // Accessing the column with spaces requires bracket notation ["..."]
-        const depotName = report.depots?.["Ship to Name"] || 'N/A';
+        let depotDisplay = report.depots?.["Ship to Name"];
+        if (!depotDisplay && report.Inexistant_DepotName) {
+            depotDisplay = `${report.Inexistant_DepotName} (Manuel)`;
+        } else if (!depotDisplay) {
+            depotDisplay = 'N/A';
+        }
 
         return `
         <div class="report-card">
             <div class="report-card-header">
                 <span><strong>T1:</strong> ${report.t1_users?.full_name || 'N/A'} </span>
-                <span><strong>POC:</strong> ${pocName} ${pocCity}</span>
+                <span><strong>POC:</strong> ${pocDisplay} ${pocCity}</span>
                 <span class="report-date">${new Date(report.created_at).toLocaleDateString()}</span>
             <div class="report-card-actions">
                 <button class="btn-edit" data-id="${report.id}"><i class="fas fa-edit"></i> Edit</button>
@@ -107,7 +117,7 @@ function renderReports(reportsToDisplay) {
             </div>
             </div>
             <div class="report-card-body">
-                <p><strong>Depot:</strong> ${depotName}</p>
+                <p><strong>Depot:</strong> ${depotDisplay}</p>
                 <p><strong>Machines:</strong> ${report.machines_sold}</p> 
                 <p><strong>Posters:</strong> ${report.posters_distributed}</p>
                 <p class="comment"><strong>Comment:</strong> ${report.comment || 'N/A'}</p>
