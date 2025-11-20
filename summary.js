@@ -9,9 +9,11 @@ const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // --- 3. DOM Elements ---
 const reportsListContainer = document.getElementById('reports-list');
 const t1FilterSelect = document.getElementById('t1-filter');
+const downloadBtn = document.getElementById('download-btn'); // NEW BUTTON
 
 // --- 4. Data Storage ---
 let allReports = [];
+let currentFilteredReports = [];
 let t1FilterChoiceInstance = null;
 
 // --- 5. Main Function to Load Data ---
@@ -32,10 +34,11 @@ async function loadData() {
 
         if (error) throw error;
 
-        allReports = data; 
-        
+        allReports = data;
+        currentFilteredReports = data;
+
         populateT1Filter(allReports);
-        renderReports(allReports); 
+        renderReports(allReports);
 
     } catch (error) {
         console.error('Error loading reports:', error);
@@ -43,10 +46,69 @@ async function loadData() {
     }
 }
 
+function downloadXLSX() {
+    if (!currentFilteredReports || currentFilteredReports.length === 0) {
+        alert("No data to download.");
+        return;
+    }
+
+    // 1. Map the data into a clean JSON format for Excel
+    const excelData = currentFilteredReports.map(row => {
+        // Resolve POC Name
+        let pocName = row.pocs?.Name;
+        if (!pocName && row.Inexistant_POCname) pocName = `${row.Inexistant_POCname} (Manuel)`;
+
+        // Resolve Depot Name
+        let depotName = row.depots?.["Ship to Name"];
+        if (!depotName && row.Inexistant_DepotName) depotName = `${row.Inexistant_DepotName} (Manuel)`;
+
+        return {
+            "Date": new Date(row.created_at).toLocaleDateString(),
+            "T1 Name": row.t1_users?.full_name || 'N/A',
+            "POC Name": pocName || 'N/A',
+            "POC City": row.pocs?.ABI_SFA_City__c || '',
+            "POC SAP ID": row.pocs?.ABI_SFA_SAPID__c || '',
+            "Depot Name": depotName || 'N/A',
+            "Depot Number": row.depots?.["Ship to number"] || '',
+            "Machines Sold": row.machines_sold,
+            "Posters Distributed": row.posters_distributed,
+            "Comment": row.comment || ''
+        };
+    });
+
+    // 2. Create a Worksheet
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+    // Optional: Auto-adjust column widths (makes it look professional)
+    const wscols = [
+        { wch: 12 }, // Date
+        { wch: 20 }, // T1
+        { wch: 30 }, // POC Name
+        { wch: 15 }, // City
+        { wch: 15 }, // SAP ID
+        { wch: 30 }, // Depot
+        { wch: 15 }, // Depot Num
+        { wch: 15 }, // Machines
+        { wch: 15 }, // Posters
+        { wch: 50 }  // Comment
+    ];
+    worksheet['!cols'] = wscols;
+
+    // 3. Create a Workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sales Reports");
+
+    // 4. Generate file name with date
+    const fileName = `Sales_Reports_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+    // 5. Download
+    XLSX.writeFile(workbook, fileName);
+}
+
 // --- 6. Function to Populate T1 Filter ---
 function populateT1Filter(reports) {
     const t1s = new Map();
-    
+
     reports.forEach(report => {
         if (report.t1_users) {
             t1s.set(report.t1_user_id, report.t1_users.full_name);
@@ -67,15 +129,15 @@ function populateT1Filter(reports) {
         t1FilterSelect.appendChild(option);
     });
 
-    t1FilterChoiceInstance = new Choices(t1FilterSelect, { 
-        searchEnabled: true, 
+    t1FilterChoiceInstance = new Choices(t1FilterSelect, {
+        searchEnabled: true,
         searchResultLimit: 10,
         shouldSort: false,
         fuseOptions: {
-          shouldSort: true,
-          threshold: 0.3,
-          ignoreLocation: true,
-          minMatchCharLength: 2
+            shouldSort: true,
+            threshold: 0.3,
+            ignoreLocation: true,
+            minMatchCharLength: 2
         }
     });
 }
@@ -95,9 +157,9 @@ function renderReports(reportsToDisplay) {
         } else if (!pocDisplay) {
             pocDisplay = 'N/A';
         }
-        
+
         const pocCity = report.pocs?.ABI_SFA_City__c ? `(${report.pocs.ABI_SFA_City__c})` : '';
-        
+
         let depotDisplay = report.depots?.["Ship to Name"];
         if (!depotDisplay && report.Inexistant_DepotName) {
             depotDisplay = `${report.Inexistant_DepotName} (Manuel)`;
@@ -132,8 +194,10 @@ t1FilterSelect.addEventListener('change', () => {
     const selectedT1Id = t1FilterSelect.value;
 
     if (selectedT1Id === 'all') {
-        renderReports(allReports); 
+        currentFilteredReports = allReports;
+        renderReports(allReports);
     } else {
+        currentFilteredReports = allReports.filter(report => report.t1_user_id === selectedT1Id);
         const filteredReports = allReports.filter(report => report.t1_user_id === selectedT1Id);
         renderReports(filteredReports);
     }
@@ -167,7 +231,7 @@ async function handleDelete(id) {
                 .eq('id', id);
 
             if (error) throw error;
-            loadData(); 
+            loadData();
 
         } catch (error) {
             console.error('Error deleting report:', error);
@@ -176,4 +240,5 @@ async function handleDelete(id) {
     }
 }
 
+downloadBtn.addEventListener('click', downloadXLSX);
 document.addEventListener('DOMContentLoaded', loadData);

@@ -248,6 +248,22 @@ img.logo {
     background-color: #41c710e1;
 }
 
+.download-btn {
+    background-color: #217346ce; /* Official Excel Green */
+    color: #fff;
+    display: inline-block; /* Changed from position: absolute */
+    padding: 0.7rem 1rem;
+       text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    font-size: 0.9rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+.download-btn:hover {
+    background-color: #1a5c38;
+    
+}
 
 .summary-link-btn,
 .back-link-btn {
@@ -478,7 +494,7 @@ p.error {
 .manual-input {
     margin-top: 0.8rem;
     
-    border-color: #000000 !important; /* Highlight it slightly */
+    border-color: #333 !important; /* Highlight it slightly */
     background-color:#fff8de
 }
 
