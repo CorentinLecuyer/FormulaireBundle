@@ -74,7 +74,15 @@ function populateT1Filter(reports) {
 
 // --- 4. Render Reports ---
 function renderReports(reportsToDisplay) {
-    currentFilteredReports = reportsToDisplay;
+    currentFilteredReports = reportsToDisplay
+
+    const totalMachines = reportsToDisplay.reduce((sum, r) => sum + (r.machines_sold || 0), 0);
+    const totalPosters = reportsToDisplay.reduce((sum, r) => sum + (r.posters_distributed || 0), 0);
+
+    // Animate the numbers (optional simple update)
+    document.getElementById('total-machines').textContent = totalMachines.toLocaleString();
+    document.getElementById('total-posters').textContent = totalPosters.toLocaleString();
+    
 
     if (reportsToDisplay.length === 0) {
         reportsListContainer.innerHTML = "<p>No reports found for this filter.</p>";
