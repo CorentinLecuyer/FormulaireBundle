@@ -133,17 +133,19 @@ async function initForm() {
     const { data: t1Names } = await _supabase.from('t1_users').select('id, full_name').order('full_name');
     const t1Options = t1Names.map(item => ({ value: item.id, label: item.full_name }));
     
-    t1ChoiceInstance = new Choices(t1Select, { choices: t1Options, searchEnabled: true, shouldSort: false });
+    t1ChoiceInstance = new Choices(t1Select, { choices: t1Options, searchEnabled: true, shouldSort: false,
+        placeholder: true, placeholderValue: 'Rechercher votre nom...', noChoicesText: 'No results found', itemSelectText: ''
+    });
 
     // Init Choices for Searchable Fields
     pocChoiceInstance = new Choices(pocSelect, {
         searchEnabled: true, searchResultLimit: 100, shouldSort: false,
-        placeholder: true, placeholderValue: 'Type to search POC...', noChoicesText: 'No results found', itemSelectText: ''
+        placeholder: true, placeholderValue: 'Rechercher un POC...', noChoicesText: 'No results found', itemSelectText: ''
     });
 
     depotChoiceInstance = new Choices(depotSelect, {
         searchEnabled: true, searchResultLimit: 100, shouldSort: false,
-        placeholder: true, placeholderValue: 'Type to search Depot...', noChoicesText: 'No results found', itemSelectText: ''
+        placeholder: true, placeholderValue: 'Rechercher un Depot...', noChoicesText: 'No results found', itemSelectText: ''
     });
 
     // Initial Load of Data
