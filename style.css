@@ -253,12 +253,11 @@ img.logo {
     color: #fff;
     display: inline-block; /* Changed from position: absolute */
     padding: 0.7rem 1rem;
-       text-decoration: none;
+    text-decoration: none;
     border-radius: 6px;
     font-weight: 500;
     transition: background-color 0.2s;
     font-size: 0.9rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 .download-btn:hover {
     background-color: #1a5c38;
