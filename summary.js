@@ -46,6 +46,7 @@ async function loadData() {
     }
 }
 
+// --- 5. EXCEL DOWNLOAD FUNCTION ---
 function downloadXLSX() {
     if (!currentFilteredReports || currentFilteredReports.length === 0) {
         alert("No data to download.");
@@ -54,22 +55,39 @@ function downloadXLSX() {
 
     // 1. Map the data into a clean JSON format for Excel
     const excelData = currentFilteredReports.map(row => {
-        // Resolve POC Name
+        
+        // --- LOGIC FOR POC ---
+        // A. Name: Try linked name, fallback to manual column
         let pocName = row.pocs?.Name;
         if (!pocName && row.Inexistant_POCname) pocName = `${row.Inexistant_POCname} (Manuel)`;
 
-        // Resolve Depot Name
+        // B. ID: Try linked SAP ID. If missing but manual name exists, use "00000000"
+        let pocId = row.pocs?.ABI_SFA_SAPID__c;
+        if (!pocId && row.Inexistant_POCname) pocId = "00000000";
+
+
+        // --- LOGIC FOR DEPOT ---
+        // A. Name: Try linked name, fallback to manual column
+        // Note: We use bracket notation ["..."] because of spaces in column name
         let depotName = row.depots?.["Ship to Name"];
         if (!depotName && row.Inexistant_DepotName) depotName = `${row.Inexistant_DepotName} (Manuel)`;
+
+        // B. Number: Try linked number. If missing but manual name exists, use "00000000"
+        let depotNumber = row.depots?.["Ship to number"];
+        if (!depotNumber && row.Inexistant_DepotName) depotNumber = "00000000";
+
 
         return {
             "Date": new Date(row.created_at).toLocaleDateString(),
             "T1 Name": row.t1_users?.full_name || 'N/A',
+            
             "POC Name": pocName || 'N/A',
             "POC City": row.pocs?.ABI_SFA_City__c || '',
-            "POC SAP ID": row.pocs?.ABI_SFA_SAPID__c || '',
+            "POC SAP ID": pocId || '', // Uses the logic defined above
+            
             "Depot Name": depotName || 'N/A',
-            "Depot Number": row.depots?.["Ship to number"] || '',
+            "Depot Number": depotNumber || '', // Uses the logic defined above
+            
             "Machines Sold": row.machines_sold,
             "Posters Distributed": row.posters_distributed,
             "Comment": row.comment || ''
@@ -79,7 +97,7 @@ function downloadXLSX() {
     // 2. Create a Worksheet
     const worksheet = XLSX.utils.json_to_sheet(excelData);
 
-    // Optional: Auto-adjust column widths (makes it look professional)
+    // Optional: Auto-adjust column widths
     const wscols = [
         { wch: 12 }, // Date
         { wch: 20 }, // T1
