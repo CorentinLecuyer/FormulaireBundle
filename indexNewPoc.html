@@ -7,34 +7,35 @@
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link
       rel="icon"
       href="img/favicon_small.ico"
       type="image/png"
-      style="max-width: fit-content"
-    />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js" defer></script>
+      style="max-width: fit-content" />
+    <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"
+      defer></script>
   </head>
   <body>
     <div class="main-wrapper">
       <div class="presentation-container">
         <img
-          src="img/PD_logo.png"
+          src="img/Logo AB InBev FullColor-Black.png"
           alt="PerfectDraft Logo"
           class="presentation-logo"
-          style="margin-bottom: 1.5rem"
-        />
+          style="margin-bottom: 1.5rem" />
         <h1>Opération Télévente PerfectDraft</h1>
         <div>
           <p>Bonjour à tous,</p>
           <p>
-            Pour procéder au remboursement des dépôts de l’offre Télévente PerfectDraft, merci
+            Pour procéder au remboursement des dépôts de l’offre Télévente
+            PerfectDraft, merci
             de compléter ce questionnaire : il fera office de
-            <b><u>base de remboursement après réception des preuves de nouvelles DNs</u></b
-            >.
+            <b><u>base de remboursement après réception des preuves de nouvelles
+                DNs</u></b>.
           </p>
         </div>
 
@@ -47,22 +48,32 @@
         </div>
 
         <div class="info-section">
-          <h3><i class="fas fa-beer"></i> Mécanique 1) Nouvelle DN  PerfectDraft</h3>
+          <h3><i class="fas fa-beer"></i> Mécanique 1) Nouvelle DN
+            PerfectDraft</h3>
           <p class="mechanic-detail">
             <span class="highlight">
-            Installation d’une machine PerfectDraft dans un POC qui n’en possède pas =
+              Installation d’une machine PerfectDraft dans un POC qui n’en
+              possède pas =
             </span>
-            <strong>50€ CAD'HOC</strong>
+            <span>
+              <strong>50€ CAD'HOC</strong>
+            </span>
           </p>
         </div>
 
         <div class="info-section">
-          <h3><i class="fas fa-beer"></i> Mécanique 2) Changement machine & Vente Fûts</h3>
+          <h3><i class="fas fa-beer"></i> Mécanique 2) Changement machine &
+            Vente Fûts</h3>
           <p class="mechanic-detail">
             <span class="highlight">
-                Remplacement d’une machine concurrente (Blade Heineken, Extra 10 Kronenbourg etc) par une machine PerfectDraft Black ET vente de 2 fûts minimum PerfectDraft =
+              Remplacement d’une machine concurrente </span><p>(Blade Heineken,
+              Extra 10
+              Kronenbourg etc) par une machine PerfectDraft Black ET vente de 2
+              fûts minimum PerfectDraft =
+            </p>
+            <span class="highlight">
+              <strong>100€ CAD'HOC</strong>
             </span>
-            <strong>100€ CAD'HOC</strong>
           </p>
         </div>
 
@@ -70,7 +81,10 @@
           <h3><i class="fas fa-tools"></i> Outils</h3>
           <p>
 
-           Un <a href="https://anheuserbuschinbev.sharepoint.com/:b:/s/FRANCE-ONTRADE/IQB8meFxK2YNTKrEzXcwOFWWAXlx5Xk-ykx7NZ9KV5Kk1qk?e=OwpGAm">Argumentaire de vente</a> est à la disposition des forces de vente pour les aider dans la démarche commerciale.
+            Un <a
+              href="https://anheuserbuschinbev.sharepoint.com/:b:/s/FRANCE-ONTRADE/IQB8meFxK2YNTKrEzXcwOFWWAXlx5Xk-ykx7NZ9KV5Kk1qk?e=OwpGAm">Argumentaire
+              de vente</a> est à la disposition des forces de vente pour les
+            aider dans la démarche commerciale.
 
           </p>
         </div>
@@ -88,19 +102,16 @@
             </li>
           </ul>
 
-
-
         </div>
-<!--     <div class="info-section">
+        <!--     <div class="info-section">
         <h3><i class="fas fa-image"></i> Posters</h3>
     <img src="img/Offre.png" alt="image de l'Opé" class="logo">
 </div> -->
       </div>
 
       <div class="form-container">
-        <a href="summary.html" class="summary-link-btn"
-          ><i class="fas fa-list-ul"></i> Voir les Rapports</a
-        >
+        <a href="summary.html" class="summary-link-btn"><i
+            class="fas fa-list-ul"></i> Voir les Rapports</a>
 
         <form id="sales-form">
           <h2>Rapport de Vente</h2>
@@ -108,16 +119,22 @@
           <div class="form-group">
             <label for="t1-name">T1</label>
             <select id="t1-name" name="t1_name" required>
-              <option value="">Loading T1 names...</option>
+              <option value>Loading T1 names...</option>
             </select>
+          </div>
+
+          <div class="form-group">
+            <label for="t2-name">T2</label>
+            <input type="text" id="t2-name" name="t2_name" readonly />
           </div>
 
           <div class="form-group">
             <label for="poc-name">Nom du POC</label>
             <select id="poc-name" name="poc_name" required>
-              <option value="">Loading POCs...</option>
+              <option value>Loading POCs...</option>
             </select>
-            <input type="text" id="manual-poc-name" class="manual-input hidden" placeholder="Entrer le nom du POC manuellement" />
+            <input type="text" id="manual-poc-name" class="manual-input hidden"
+              placeholder="Entrer le nom du POC manuellement" />
           </div>
 
           <div class="form-group">
@@ -128,9 +145,11 @@
           <div class="form-group">
             <label for="depot-name">Nom du DEPOT</label>
             <select id="depot-name" name="depot_name" required>
-              <option value="">Loading Depots...</option>
+              <option value>Loading Depots...</option>
             </select>
-            <input type="text" id="manual-depot-name" class="manual-input hidden" placeholder="Entrer le nom du DEPOT manuellement" />
+            <input type="text" id="manual-depot-name"
+              class="manual-input hidden"
+              placeholder="Entrer le nom du DEPOT manuellement" />
           </div>
 
           <div class="form-group">
@@ -139,27 +158,45 @@
           </div>
 
           <div class="form-group">
-            <label for="machines-sold">Nombre de Machines Vendues</label>
-            <input
-              type="number"
-              id="machines-sold"
-              name="machines_sold"
-              min="0"
-              required
-            />
+            <label for="mechanic">Mécanique jouée</label>
+            <input type="text" id="mechanic" name="mechanic"
+              placeholder="Sélectionner la mécanique" required>
           </div>
 
           <div class="form-group">
-            <label for="posters-distributed"
-              >Nombre de Posters Distribués</label
-            >
-            <input
-              type="number"
-              id="posters-distributed"
-              name="posters_distributed"
-              min="0"
-              required
-            />
+            <label for="stats-proofs">Do you have Stats Proofs?</label>
+            <select id="stats-proofs" name="stats_proofs" required>
+              <option value="false">No</option>
+              <option value="true">Yes</option>
+            </select>
+          </div>
+
+          <div id="proof-upload-wrapper" class="form-group hidden">
+            <label for="proof-file">Upload Proof (Image/PDF)</label>
+            <div class="file-upload-container">
+              <input type="file" id="proof-file"
+                accept="image/*,application/pdf">
+              <span class="file-limit-msg">Max size: 5MB</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="mechanic-detail">Mécanique jouée</label>
+            <select id="mechanic-detail" name="mechanic-detail" required>
+              <option value disabled selected>Sélectionner la mécanique</option>
+              <option>Blade ou Extra10 remplacé par PerfectDraft</option>
+              <option>Nouvelle DN</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="YesNo">Stat/preuves</label>
+            <select id="YesNo" name="YesNo" required>
+              <option value disabled selected>Avez-vous une preuve/statistique
+                ?</option>
+              <option>Oui</option>
+              <option>Non</option>
+            </select>
           </div>
 
           <div class="form-group">

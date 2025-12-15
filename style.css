@@ -564,6 +564,33 @@ p.error {
     color: #333;
 }
 
+.file-upload-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 2px dashed #ddd;
+    border-radius: 6px;
+    background-color: #fafafa;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.file-upload-container:hover {
+    border-color: #000;
+}
+
+input[type="file"] {
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.file-limit-msg {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+
 /* Responsive adjustment for stats */
 @media (max-width: 600px) {
     .stats-container {
